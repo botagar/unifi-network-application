@@ -1,10 +1,11 @@
- 
 ---
 version: "3.4"
 services:
   mongodb:
     image: mongo:4.4.24
     container_name: unifi-mongodb
+    networks:
+      - network-bridge-unifi
     volumes:
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ~/.unifi/mongo:/data/db
@@ -17,6 +18,9 @@ services:
         condition: service_healthy
     image: lscr.io/linuxserver/unifi-network-application:latest
     container_name: unifi-network-application
+    hostname: unifi
+    networks:
+      - network-bridge-unifi
     environment:
       - PUID=1000
       - PGID=1000
@@ -41,3 +45,8 @@ services:
       - 6789:6789 #optional
       - 5514:5514/udp #optional
     restart: unless-stopped
+
+networks:
+  network-bridge-unifi:
+    name: network-bridge-unifi
+    driver: host # bridge host
