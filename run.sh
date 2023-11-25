@@ -16,7 +16,7 @@ check_command()
 {
     echo "Checking for ${*:1}..."
     echo "Querying command [$(which $1) ${@:2}]"
-    if ! (command -v "${*:1}" > /dev/null)
+    if ! (bash -c "${*:1}" > /dev/null)
     then
         echo "${*:1} returned an error"
         return 1
